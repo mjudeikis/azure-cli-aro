@@ -1,1 +1,1 @@
-# azure-cli-aro
+# Azure Red Hat OpenShift azure-cli extension
