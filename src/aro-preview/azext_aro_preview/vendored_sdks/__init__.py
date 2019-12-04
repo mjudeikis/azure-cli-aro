@@ -7,6 +7,7 @@
 
 from .azure_red_hat_open_shift import AzureRedHatOpenShift
 from .version import VERSION
+from azure.cli.core.profiles import register_resource_type
 
 __all__ = ['AzureRedHatOpenShift']
 
