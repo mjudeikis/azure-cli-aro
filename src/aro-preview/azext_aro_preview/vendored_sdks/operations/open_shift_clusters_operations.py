@@ -6,7 +6,7 @@
 # --------------------------------------------------------------------------
 
 from msrest.pipeline import ClientRawResponse
-
+from pprint import pprint
 from .. import models
 
 
@@ -255,6 +255,7 @@ class OpenShiftClustersOperations(object):
 
         # Construct and send request
         request = self._client.put(url, query_parameters)
+        pprint(vars(request))
         response = self._client.send(
             request, header_parameters, body_content, stream=False, **operation_config)
 
