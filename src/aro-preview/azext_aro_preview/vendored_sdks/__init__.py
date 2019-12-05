@@ -5,10 +5,11 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from .azure_red_hat_open_shift_client import AzureRedHatOpenShiftClient
-from .version import VERSION
+from ._configuration import AzureRedHatOpenShiftClientConfiguration
+from ._azure_red_hat_open_shift_client import AzureRedHatOpenShiftClient
+__all__ = ['AzureRedHatOpenShiftClient', 'AzureRedHatOpenShiftClientConfiguration']
 
-__all__ = ['AzureRedHatOpenShiftClient']
+from .version import VERSION
 
 __version__ = VERSION
 

@@ -5,8 +5,6 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-import os
-
 from msrest.service_client import ServiceClient
 from msrest import Configuration, Serializer, Deserializer
 from .version import VERSION
@@ -37,8 +35,6 @@ class AzureRedHatOpenShiftClientConfiguration(Configuration):
             raise ValueError("Parameter 'subscription_id' must not be None.")
         if credentials is None:
             raise ValueError("Parameter 'credentials' must not be None.")
-        if os.environ.get('BASE_URL') != "":
-             base_url = os.environ.get('BASE_URL')
         if not base_url:
             base_url = 'https://management.azure.com'
 

@@ -5,30 +5,44 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from .cloud_error_body import CloudErrorBody
-from .cloud_error import CloudError, CloudErrorException
-from .display import Display
-from .master_profile import MasterProfile
-from .network_profile import NetworkProfile
-from .service_principal_profile import ServicePrincipalProfile
-from .worker_profile import WorkerProfile
-from .open_shift_cluster import OpenShiftCluster
-from .open_shift_cluster_credentials import OpenShiftClusterCredentials
-from .open_shift_cluster_list import OpenShiftClusterList
-from .operation import Operation
-from .operation_list import OperationList
+try:
+    from ._models_py3 import CloudError, CloudErrorException
+    from ._models_py3 import CloudErrorBody
+    from ._models_py3 import Display
+    from ._models_py3 import MasterProfile
+    from ._models_py3 import NetworkProfile
+    from ._models_py3 import OpenShiftCluster
+    from ._models_py3 import OpenShiftClusterCredentials
+    from ._models_py3 import OpenShiftClusterList
+    from ._models_py3 import Operation
+    from ._models_py3 import OperationList
+    from ._models_py3 import ServicePrincipalProfile
+    from ._models_py3 import WorkerProfile
+except (SyntaxError, ImportError):
+    from ._models import CloudError, CloudErrorException
+    from ._models import CloudErrorBody
+    from ._models import Display
+    from ._models import MasterProfile
+    from ._models import NetworkProfile
+    from ._models import OpenShiftCluster
+    from ._models import OpenShiftClusterCredentials
+    from ._models import OpenShiftClusterList
+    from ._models import Operation
+    from ._models import OperationList
+    from ._models import ServicePrincipalProfile
+    from ._models import WorkerProfile
 
 __all__ = [
-    'CloudErrorBody',
     'CloudError', 'CloudErrorException',
+    'CloudErrorBody',
     'Display',
     'MasterProfile',
     'NetworkProfile',
-    'ServicePrincipalProfile',
-    'WorkerProfile',
     'OpenShiftCluster',
     'OpenShiftClusterCredentials',
     'OpenShiftClusterList',
     'Operation',
     'OperationList',
+    'ServicePrincipalProfile',
+    'WorkerProfile',
 ]

@@ -5,8 +5,8 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from ._operations import Operations
-from ._open_shift_clusters_operations import OpenShiftClustersOperations
+from ._operations_async import Operations
+from ._open_shift_clusters_operations_async import OpenShiftClustersOperations
 
 __all__ = [
     'Operations',

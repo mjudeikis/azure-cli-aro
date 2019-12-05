@@ -5,10 +5,5 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from ._operations import Operations
-from ._open_shift_clusters_operations import OpenShiftClustersOperations
-
-__all__ = [
-    'Operations',
-    'OpenShiftClustersOperations',
-]
+from ._azure_red_hat_open_shift_client_async import AzureRedHatOpenShiftClient
+__all__ = ['AzureRedHatOpenShiftClient']
