@@ -23,4 +23,3 @@ def load_command_table(self, _):
         g.custom_command('update', 'aro_preview_update')
 
         g.custom_command('get-credentials', 'aro_preview_get_credentials')
-

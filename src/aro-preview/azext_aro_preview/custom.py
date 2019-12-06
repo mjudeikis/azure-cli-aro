@@ -4,9 +4,7 @@
 # --------------------------------------------------------------------------------------------
 
 import time
-import os
 import uuid
-import pprint
 
 from knack.util import CLIError
 from knack.log import get_logger
@@ -18,15 +16,16 @@ from ._client_factory import (cf_resource_groups,
                               cf_auth_management,
                               cf_graph_rbac_management)
 from .vendored_sdks.models import (OpenShiftCluster,
-                                  ServicePrincipalProfile,
-                                  NetworkProfile,
-                                  WorkerProfile,
-                                  MasterProfile)
+                                   ServicePrincipalProfile,
+                                   NetworkProfile,
+                                   WorkerProfile,
+                                   MasterProfile)
 from azure.graphrbac.models import GetObjectsParameters
 
 from msrestazure.azure_exceptions import CloudError
 
 logger = get_logger(__name__)
+
 
 def aro_preview_create(cmd, client, resource_group_name, resource_name,
                        client_id,
@@ -57,38 +56,38 @@ def aro_preview_create(cmd, client, resource_group_name, resource_name,
         if provider_client_id is None:
             raise CLIError('provider-client-id must be set to crete vnet resource group')
         if not _create_vnet_resourcegroup(cmd.cli_ctx,
-                                        resource_name,
-                                        resource_group_name+"-vnet",
-                                        subscription_id,
-                                        location,
-                                        provider_client_id,
-                                        client_id):
+                                          resource_name,
+                                          resource_group_name + "-vnet",
+                                          subscription_id,
+                                          location,
+                                          provider_client_id,
+                                          client_id):
             raise CLIError('Count not create VNET resource group'
                            'Are you an Owner on this subscription?')
 
-        vnet_rg_name = resource_group_name+"-vnet"
+        vnet_rg_name = resource_group_name + "-vnet"
 
     # check if provided vnet contains right subnets, if not - fail
     if vnet_name is None:
         vnet_name = "vnet"
     if vnet_worker_subnet_name is None:
-        vnet_worker_subnet_name = resource_name+"-worker"
+        vnet_worker_subnet_name = resource_name + "-worker"
     if vnet_master_subnet_name is None:
-        vnet_master_subnet_name = resource_name+"-master"
+        vnet_master_subnet_name = resource_name + "-master"
 
 
     if not _validate_vnet_subnet(cmd.cli_ctx, vnet_rg_name, vnet_name, vnet_master_subnet_name, subscription_id) and \
        not _validate_vnet_subnet(cmd.cli_ctx, vnet_rg_name, vnet_name, vnet_worker_subnet_name, subscription_id):
-          raise CLIError('Provided vnet validation error')
+        raise CLIError('Provided vnet validation error')
 
     # set subnetID's
-    vnet_master_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_master_subnet_name)
-    vnet_worker_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_worker_subnet_name)
+    vnet_master_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_master_subnet_name) # pylint: disable=line-too-long
+    vnet_worker_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_worker_subnet_name) # pylint: disable=line-too-long
 
     if pod_cidr is None:
         pod_cidr = "10.128.0.0/14"
     if service_cidr is None:
-        service_cidr =  "172.30.0.0/16"
+        service_cidr = "172.30.0.0/16"
 
 
     # vm configuration
@@ -104,51 +103,52 @@ def aro_preview_create(cmd, client, resource_group_name, resource_name,
 
     # construct OpenShiftCluster object
     oc = OpenShiftCluster(
-        location = location,
-        tags = tags,
-        service_principal_profile = ServicePrincipalProfile(
-            client_id = client_id,
-            client_secret = client_secret,
+        location=location,
+        tags=tags,
+        service_principal_profile=ServicePrincipalProfile(
+            client_id=client_id,
+            client_secret=client_secret,
         ),
-        network_profile = NetworkProfile(
-            pod_cidr = pod_cidr,
-            service_cidr = service_cidr,
+        network_profile=NetworkProfile(
+            pod_cidr=pod_cidr,
+            service_cidr=service_cidr,
         ),
-        master_profile = MasterProfile(
-            vm_size = master_vm_size,
-            subnet_id = vnet_master_subnet_name,
+        master_profile=MasterProfile(
+            vm_size=master_vm_size,
+            subnet_id=vnet_master_subnet_name,
         ),
-        worker_profiles = [WorkerProfile(
-            name = "worker",
-            vm_size = worker_vm_size,
-            disk_size_gb = worker_vm_disk_size_gb,
-            subnet_id = vnet_worker_subnet_name,
-            count = worker_count,
+        worker_profiles=[WorkerProfile(
+            name="worker",
+            vm_size=worker_vm_size,
+            disk_size_gb=worker_vm_disk_size_gb,
+            subnet_id=vnet_worker_subnet_name,
+            count=worker_count,
         )]
     )
     return sdk_no_wait(no_wait, client.create,
-                resource_group_name=resource_group_name, resource_name=resource_name, parameters=oc)
+                       resource_group_name=resource_group_name,
+                       resource_name=resource_name,
+                       parameters=oc)
 
-def aro_preview_delete(cmd, client, resource_group_name, resource_name,
+def aro_preview_delete(client, resource_group_name, resource_name,
                        no_wait=False):
     return sdk_no_wait(no_wait, client.delete,
-                resource_group_name=resource_group_name, resource_name=resource_name)
+                       resource_group_name=resource_group_name,
+                       resource_name=resource_name)
 
-def aro_preview_list(cmd, client, resource_group_name=None, location=None, tags=None):
+def aro_preview_list(client, resource_group_name):
     return client.list(resource_group_name)
 
-def aro_preview_show(cmd, client, resource_group_name, resource_name, location=None, tags=None):
+def aro_preview_show(client, resource_group_name, resource_name):
     return client.get(resource_group_name, resource_name)
 
-def aro_preview_get_credentials(cmd, client, resource_group_name, resource_name, location=None, tags=None):
+def aro_preview_get_credentials(client, resource_group_name, resource_name):
     return client.get_credentials(resource_group_name, resource_name)
 
-def aro_preview_update(cmd, client, resource_group_name, resource_name,
-                        location=None,
-                        tags=None,
-                        worker_count=None,
-                        worker_pool_name=None,
-                        no_wait=False):
+def aro_preview_update(client, resource_group_name, resource_name,
+                       worker_count=None,
+                       worker_pool_name=None,
+                       no_wait=False):
 
     if worker_pool_name is None:
         worker_pool_name = "workers"
@@ -160,7 +160,9 @@ def aro_preview_update(cmd, client, resource_group_name, resource_name,
             oc.WorkerProfile[i].count = worker_count
 
     return sdk_no_wait(no_wait, client.create,
-                resource_group_name=resource_group_name, resource_name=resource_name, parameters=oc)
+                       resource_group_name=resource_group_name,
+                       resource_name=resource_name,
+                       parameters=oc)
 
 
 def _get_rg_location(ctx, resource_group_name, subscription_id=None):
@@ -178,26 +180,26 @@ def _validate_vnet_subnet(cli_ctx, resource_group_name, virtual_network_name, su
             return True
     return False
 
-def _create_vnet_resourcegroup(cli_ctx, cluster_name, resource_group_name, subscription_id, location, provider_client_id, cluster_client_id, delay=2):
+def _create_vnet_resourcegroup(cli_ctx, cluster_name, resource_group_name,
+                               subscription_id,
+                               location,
+                               provider_client_id,
+                               cluster_client_id,
+                               delay=2):
     #az group create -g "$VNET_RESOURCEGROUP" -l "$LOCATION"
     if not _create_resourcegroup(cli_ctx, resource_group_name, subscription_id, location, delay):
         return False
 
-    #az network vnet create -g "$VNET_RESOURCEGROUP" -n vnet --address-prefixes 10.0.0.0/9
-    #az network vnet subnet create -g "$VNET_RESOURCEGROUP" --vnet-name vnet -n "$CLUSTER-master" --address-prefixes 10.$((RANDOM & 127)).$((RANDOM & 255)).0/24
-    #az network vnet subnet create -g "$VNET_RESOURCEGROUP" --vnet-name vnet -n "$CLUSTER-worker" --address-prefixes 10.$((RANDOM & 127)).$((RANDOM & 255)).0/24
     if not _create_vnet(cli_ctx, resource_group_name, "vnet", "10.0.0.0/9", cluster_name,
-            subscription_id,location):
+                        subscription_id, location):
         return False
 
-    #az role assignment create --role "ARO v4 Development Subnet Contributor" --assignee-object-id "$(az ad sp list --all --query "[?appId=='$AZURE_FP_CLIENT_ID'].objectId" -o tsv)" --scope "/subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$VNET_RESOURCEGROUP/providers/Microsoft.Network/virtualNetworks/vnet"
-    #az role assignment create --role "ARO v4 Development Subnet Contributor" --assignee-object-id "$(az ad sp list --all --query "[?appId=='$AZURE_CLUSTER_CLIENT_ID'].objectId" -o tsv)" --scope "/subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$VNET_RESOURCEGROUP/providers/Microsoft.Network/virtualNetworks/vnet"
     if not _add_role_assignment(cli_ctx, "ARO v4 Development Subnet Contributor", provider_client_id, delay,
-                '/subscriptions/{}/resourceGroups/{}/providers/Microsoft.Network/virtualNetworks/vnet'.format(subscription_id, resource_group_name)):
+                                "/subscriptions/{}/resourceGroups/{}/providers/Microsoft.Network/virtualNetworks/vnet".format(subscription_id, resource_group_name)): # pylint: disable=line-too-long
         return False
 
     if not _add_role_assignment(cli_ctx, "ARO v4 Development Subnet Contributor", cluster_client_id, delay,
-            '/subscriptions/{}/resourceGroups/{}/providers/Microsoft.Network/virtualNetworks/vnet'.format(subscription_id, resource_group_name)):
+                                "/subscriptions/{}/resourceGroups/{}/providers/Microsoft.Network/virtualNetworks/vnet".format(subscription_id, resource_group_name)): # pylint: disable=line-too-long
         return False
 
     return True
@@ -225,7 +227,11 @@ def _create_resourcegroup(cli_ctx, resource_group_name, subscription_id, locatio
     logger.info('Resource group creation done')
     return True
 
-def _create_vnet(cli_ctx, resource_group_name, resource_name, address_prefix, subnet_prefix, subscription_id, location, delay=2):
+def _create_vnet(cli_ctx, resource_group_name, resource_name, address_prefix,
+                 subnet_prefix,
+                 subscription_id,
+                 location,
+                 delay=2):
     hook = cli_ctx.get_progress_controller(True)
     hook.add(message='Waiting for create vnet', value=0, total_val=1.0)
     logger.info('Waiting for create vnet')
@@ -377,4 +383,3 @@ def _get_object_stubs(graph_client, assignees):
     params = GetObjectsParameters(include_directory_object_references=True,
                                   object_ids=assignees)
     return list(graph_client.objects.get_objects_by_object_ids(params))
-
