@@ -31,8 +31,10 @@ az aro-preview create --resource-group clustername-v4 -n clustername-test --loca
 ```
 
 Create a clueter with BYO vnet rg:
+```
 az aro-preview create --resource-group clustername--vnet-rg-name clustername-vnet -n clustername-test --loc
 ation=eastus --client-id=$AZURE_CLUSTER_CLIENT_ID --client-secret=$AZURE_CLUSTER_CLIENT_SECRET
+```
 
 ## Vendoring new SDK
 
