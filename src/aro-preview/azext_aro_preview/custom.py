@@ -134,17 +134,33 @@ def aro_preview_delete(cmd, client, resource_group_name, resource_name,
     return sdk_no_wait(no_wait, client.delete,
                 resource_group_name=resource_group_name, resource_name=resource_name)
 
-def aro_preview_list(cmd, client, resource_group_name=None, resource_name=None, location=None, tags=None):
-    raise CLIError('TODO: Implement `aro_preview list`')
+def aro_preview_list(cmd, client, resource_group_name=None, location=None, tags=None):
+    return client.list(resource_group_name)
 
 def aro_preview_show(cmd, client, resource_group_name, resource_name, location=None, tags=None):
-    raise CLIError('TODO: Implement `aro_preview list`')
+    return client.get(resource_group_name, resource_name)
 
 def aro_preview_get_credentials(cmd, client, resource_group_name, resource_name, location=None, tags=None):
-    raise CLIError('TODO: Implement `aro_preview list`')
+    return client.get_credentials(resource_group_name, resource_name)
 
-def aro_preview_update(cmd, client, resource_group_name, resource_name, location=None, tags=None):
-   raise CLIError('TODO: Implement `aro_preview list`')
+def aro_preview_update(cmd, client, resource_group_name, resource_name,
+                        location=None,
+                        tags=None,
+                        worker_count=None,
+                        worker_pool_name=None,
+                        no_wait=False):
+
+    if worker_pool_name is None:
+        worker_pool_name = "workers"
+
+    oc = client.get(resource_group_name, resource_name)
+
+    for i, p in oc.WorkerProfile:
+        if p.name == worker_pool_name and p.count != worker_count:
+            oc.WorkerProfile[i].count = worker_count
+
+    return sdk_no_wait(no_wait, client.create,
+                resource_group_name=resource_group_name, resource_name=resource_name, parameters=oc)
 
 
 def _get_rg_location(ctx, resource_group_name, subscription_id=None):
