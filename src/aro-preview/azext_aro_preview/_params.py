@@ -19,6 +19,8 @@ def load_arguments(self, _):
         c.argument('tags', tags_type)
         c.argument('location', validator=get_default_location_from_resource_group)
         c.argument('resource_name', resource_name_type, options_list=['--name', '-n'])
+
+    with self.argument_context('aro-preview create') as c:
         c.argument('client_id', options_list=('--client-id'), help='Cluster service principal clientID')
         c.argument('client_secret',options_list=('--client-secret'), help='Cluster service principal clientSecret')
         c.argument('pod-cidr', options_list=('--pod-cidr'), help='Pod netowork CIDR [Default: 10.128.0.0/14]')
@@ -40,10 +42,17 @@ def load_arguments(self, _):
                     help='Provider clientID, used to create vnet Resource group role bindings')
         # if VNET name is provided we validate if cluster-name-{worker/master} subnets exist, if not
         # we require fags below
+        c.argument('vnet-name',options_list=('--vnet-name'),
+                    help='Name of the vnet inside vnet-rg-name')
         c.argument('vnet-master-subnet-name', options_list=('--vnet-master-subnet-name'),
                     help='Vnet master subnet name')
         c.argument('vnet-worker-subnet-name', options_list=('--vnet-worker-subnet-name'),
                     help='Vnet worker subnet name')
+
+
+    with self.argument_context('aro-preview delete') as c:
+         c.argument('resource_name', resource_name_type, options_list=['--name', '-n'])
+
 
     with self.argument_context('aro-preview list') as c:
         c.argument('resource_name', resource_name_type, id_part=None)

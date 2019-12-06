@@ -6,6 +6,7 @@
 import time
 import os
 import uuid
+import pprint
 
 from knack.util import CLIError
 from knack.log import get_logger
@@ -37,6 +38,7 @@ def aro_preview_create(cmd, client, resource_group_name, resource_name,
                        worker_vm_disk_size_gb=None,
                        worker_count=None,
                        vnet_rg_name=None,
+                       vnet_name=None,
                        vnet_worker_subnet_name=None,
                        vnet_master_subnet_name=None,
                        provider_client_id=None,
@@ -63,11 +65,25 @@ def aro_preview_create(cmd, client, resource_group_name, resource_name,
                                         client_id):
             raise CLIError('Count not create VNET resource group'
                            'Are you an Owner on this subscription?')
-        # set subnetiD's if we created vnet
-        vnet_master_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, resource_group_name+"-vnet", resource_name+"-master")
-        vnet_worker_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, resource_group_name+"-vnet", resource_name+"-worker")
+
+        vnet_rg_name = resource_group_name+"-vnet"
 
     # check if provided vnet contains right subnets, if not - fail
+    if vnet_name is None:
+        vnet_name = "vnet"
+    if vnet_worker_subnet_name is None:
+        vnet_worker_subnet_name = resource_name+"-worker"
+    if vnet_master_subnet_name is None:
+        vnet_master_subnet_name = resource_name+"-master"
+
+
+    if not _validate_vnet_subnet(cmd.cli_ctx, vnet_rg_name, vnet_name, vnet_master_subnet_name, subscription_id) and \
+       not _validate_vnet_subnet(cmd.cli_ctx, vnet_rg_name, vnet_name, vnet_worker_subnet_name, subscription_id):
+          raise CLIError('Provided vnet validation error')
+
+    # set subnetID's
+    vnet_master_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_master_subnet_name)
+    vnet_worker_subnet_name = "/subscriptions/{}/resourcegroups/{}/providers/Microsoft.Network/virtualNetworks/vnet/subnets/{}".format(subscription_id, vnet_rg_name, vnet_worker_subnet_name)
 
     if pod_cidr is None:
         pod_cidr = "10.128.0.0/14"
@@ -113,9 +129,10 @@ def aro_preview_create(cmd, client, resource_group_name, resource_name,
     return sdk_no_wait(no_wait, client.create,
                 resource_group_name=resource_group_name, resource_name=resource_name, parameters=oc)
 
-def aro_preview_delete(cmd, client, resource_group_name, resource_name, location=None, tags=None):
-    raise CLIError('TODO: Implement `aro_preview create`')
-
+def aro_preview_delete(cmd, client, resource_group_name, resource_name,
+                       no_wait=False):
+    return sdk_no_wait(no_wait, client.delete,
+                resource_group_name=resource_group_name, resource_name=resource_name)
 
 def aro_preview_list(cmd, client, resource_group_name=None, resource_name=None, location=None, tags=None):
     raise CLIError('TODO: Implement `aro_preview list`')
@@ -135,6 +152,15 @@ def _get_rg_location(ctx, resource_group_name, subscription_id=None):
     # Just do the get, we don't need the result, it will error out if the group doesn't exist.
     rg = groups.get(resource_group_name)
     return rg.location
+
+def _validate_vnet_subnet(cli_ctx, resource_group_name, virtual_network_name, subnet_name, subscription_id):
+    subnet_client = cf_network_virtual_networks_subnets(cli_ctx, subscription_id)
+    subnet_list = subnet_client.list(resource_group_name, virtual_network_name)
+
+    for i in subnet_list:
+        if i.name == subnet_name:
+            return True
+    return False
 
 def _create_vnet_resourcegroup(cli_ctx, cluster_name, resource_group_name, subscription_id, location, provider_client_id, cluster_client_id, delay=2):
     #az group create -g "$VNET_RESOURCEGROUP" -l "$LOCATION"

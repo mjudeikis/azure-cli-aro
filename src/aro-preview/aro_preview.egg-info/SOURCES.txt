@@ -18,9 +18,18 @@ azext_aro_preview/tests/__init__.py
 azext_aro_preview/tests/latest/__init__.py
 azext_aro_preview/tests/latest/test_aro_preview_scenario.py
 azext_aro_preview/vendored_sdks/__init__.py
+azext_aro_preview/vendored_sdks/_azure_red_hat_open_shift_client.py
+azext_aro_preview/vendored_sdks/_configuration.py
 azext_aro_preview/vendored_sdks/azure_red_hat_open_shift_client.py
 azext_aro_preview/vendored_sdks/version.py
+azext_aro_preview/vendored_sdks/aio/__init__.py
+azext_aro_preview/vendored_sdks/aio/_azure_red_hat_open_shift_client_async.py
+azext_aro_preview/vendored_sdks/aio/operations_async/__init__.py
+azext_aro_preview/vendored_sdks/aio/operations_async/_open_shift_clusters_operations_async.py
+azext_aro_preview/vendored_sdks/aio/operations_async/_operations_async.py
 azext_aro_preview/vendored_sdks/models/__init__.py
+azext_aro_preview/vendored_sdks/models/_models.py
+azext_aro_preview/vendored_sdks/models/_models_py3.py
 azext_aro_preview/vendored_sdks/models/cloud_error.py
 azext_aro_preview/vendored_sdks/models/cloud_error_body.py
 azext_aro_preview/vendored_sdks/models/display.py
@@ -34,5 +43,7 @@ azext_aro_preview/vendored_sdks/models/operation_list.py
 azext_aro_preview/vendored_sdks/models/service_principal_profile.py
 azext_aro_preview/vendored_sdks/models/worker_profile.py
 azext_aro_preview/vendored_sdks/operations/__init__.py
+azext_aro_preview/vendored_sdks/operations/_open_shift_clusters_operations.py
+azext_aro_preview/vendored_sdks/operations/_operations.py
 azext_aro_preview/vendored_sdks/operations/open_shift_clusters_operations.py
 azext_aro_preview/vendored_sdks/operations/operations.py

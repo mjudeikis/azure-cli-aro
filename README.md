@@ -1,5 +1,12 @@
 # Azure Red Hat OpenShift azure-cli extension
 
+## Install extension
+
+Using `azdev` tool add extension repo:
+```
+azdev extension repo add /home/mjudeiki/go/src/github.com/mjudeikis/azure-cli-aro
+zdev extension add aro-preview
+```
 
 ## Dev RP
 
@@ -20,10 +27,12 @@ curl -k -X PUT "https://localhost:8443/subscriptions/$AZURE_SUBSCRIPTION_ID?api-
 
 Create a cluster when CLI created RH and VNET:
 ```
-az aro-preview create --resource-group mjudeikis-v4 -n mjudeikisv4-test --location=eastus --client-id=$AZURE_CLIENT_ID --client-secret=$AZURE_CLIENT_SECRET --provider-client-id=$AZURE_FP_CLIENT_ID --cluster-client-id=$AZURE_CLUSTER_CLIENT_ID
+az aro-preview create --resource-group clustername-v4 -n clustername-test --location=eastus --client-id=$AZURE_CLIENT_ID --client-secret=$AZURE_CLIENT_SECRET --provider-client-id=$AZURE_FP_CLIENT_ID
 ```
 
 Create a clueter with BYO vnet rg:
+az aro-preview create --resource-group clustername--vnet-rg-name clustername-vnet -n clustername-test --loc
+ation=eastus --client-id=$AZURE_CLUSTER_CLIENT_ID --client-secret=$AZURE_CLUSTER_CLIENT_SECRET
 
 ## Vendoring new SDK
 
