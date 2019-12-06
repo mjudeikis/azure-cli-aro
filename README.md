@@ -16,6 +16,15 @@ Manually register subscription to fakeRP. In production this will be done via
 curl -k -X PUT "https://localhost:8443/subscriptions/$AZURE_SUBSCRIPTION_ID?api-version=2.0" -H 'Content-Type: application/json' -d '{"state": "Registered", "properties": {"tenantId": "'"$AZURE_TENANT_ID"'"}}'
 ```
 
+## Examples
+
+Create a cluster when CLI created RH and VNET:
+```
+az aro-preview create --resource-group mjudeikis-v4 -n mjudeikisv4-test --location=eastus --client-id=$AZURE_CLIENT_ID --client-secret=$AZURE_CLIENT_SECRET --provider-client-id=$AZURE_FP_CLIENT_ID --cluster-client-id=$AZURE_CLUSTER_CLIENT_ID
+```
+
+Create a clueter with BYO vnet rg:
+
 ## Vendoring new SDK
 
 When vendoring dev version of aro cli, extend `AzureRedHatOpenShiftClientConfiguration`:

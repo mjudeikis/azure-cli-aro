@@ -1,3 +1,2 @@
 src/aro-preview/*.egg-info
-__pycache__
-!**/__pycache__/
+src/aro-preview/azext_aro_preview/__pycache__/*
