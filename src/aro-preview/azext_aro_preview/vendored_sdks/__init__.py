@@ -5,11 +5,11 @@
 # regenerated.
 # --------------------------------------------------------------------------
 
-from .azure_red_hat_open_shift import AzureRedHatOpenShift
-from .version import VERSION
-from azure.cli.core.profiles import register_resource_type
+from ._configuration import AzureRedHatOpenShiftClientConfiguration
+from ._azure_red_hat_open_shift_client import AzureRedHatOpenShiftClient
+__all__ = ['AzureRedHatOpenShiftClient', 'AzureRedHatOpenShiftClientConfiguration']
 
-__all__ = ['AzureRedHatOpenShift']
+from .version import VERSION
 
 __version__ = VERSION
 
