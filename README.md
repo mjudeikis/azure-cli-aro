@@ -5,13 +5,13 @@
 Using `azdev` tool add extension repo:
 ```
 azdev extension repo add /home/mjudeiki/go/src/github.com/mjudeikis/azure-cli-aro
-zdev extension add aro-preview
+zdev extension add aro
 ```
 
 ## Dev RP
 
 To run CLI commands for dev CLI you will need to set env `BASE_URL`
-to `BASE_URL=https://localhost:8443/`.
+to `export BASE_URL=https://localhost:8443/`.
 
 Disable ssl check for CLI:
 `export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1`
@@ -27,14 +27,35 @@ curl -k -X PUT "https://localhost:8443/subscriptions/$AZURE_SUBSCRIPTION_ID?api-
 
 Create a cluster when CLI created RH and VNET:
 ```
-az aro-preview create --resource-group clustername-v4 -n clustername-test --location=eastus --client-id=$AZURE_CLIENT_ID --client-secret=$AZURE_CLIENT_SECRET --provider-client-id=$AZURE_FP_CLIENT_ID
+az aro create --resource-group resourcegroup -n clustername --location=eastus --client-id=$AZURE_CLIENT_ID --client-secret=$AZURE_CLIENT_SECRET --provider-client-id=$AZURE_FP_CLIENT_ID
 ```
 
-Create a clueter with BYO vnet rg:
+Create a cluster with BYO vnet rg:
 ```
-az aro-preview create --resource-group clustername--vnet-rg-name clustername-vnet -n clustername-test --loc
+az aro create --resource-group resourcegroup --vnet-rg-name clustername-vnet -n clustername-test --loc
 ation=eastus --client-id=$AZURE_CLUSTER_CLIENT_ID --client-secret=$AZURE_CLUSTER_CLIENT_SECRET
 ```
+
+List all clusters:
+```
+az aro list
+```
+
+Get cluster credentials:
+```
+az aro get-credentials -n clustername -g resourcegroup
+```
+
+Get single cluster:
+```
+az aro get -n clustername -g resourcegroup
+```
+
+Delete a cluster:
+```
+az aro delete -n clustername -g resourcegroup
+```
+
 
 ## Vendoring new SDK
 

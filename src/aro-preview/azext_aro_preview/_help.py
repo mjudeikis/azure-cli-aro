@@ -32,6 +32,11 @@ helps['aro-preview show'] = """
     short-summary: Show details of a aro-preview.
 """
 
+helps['aro-preview get-credentials'] = """
+    type: command
+    short-summary: Get aro-previews cluster credentials
+"""
+
 helps['aro-preview update'] = """
     type: command
     short-summary: Update a aro-preview.

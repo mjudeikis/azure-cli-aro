@@ -3,8 +3,8 @@
 # Licensed under the MIT License. See License.txt in the project root for license information.
 # --------------------------------------------------------------------------------------------
 
+
 from azure.cli.core import AzCommandsLoader
-from azure.cli.core.profiles import register_resource_type
 from ._help import helps  # pylint: disable=unused-import
 
 class AroPreviewCommandsLoader(AzCommandsLoader):
@@ -14,8 +14,8 @@ class AroPreviewCommandsLoader(AzCommandsLoader):
 
         aro_preview_custom = CliCommandType(operations_tmpl='azext_aro_preview.custom#{}')
         super(AroPreviewCommandsLoader, self).__init__(cli_ctx=cli_ctx,
-                                                  custom_command_type=aro_preview_custom,
-                                                  resource_type=aro_preview_custom)
+                                                       custom_command_type=aro_preview_custom,
+                                                       resource_type=aro_preview_custom)
 
     def load_command_table(self, args):
         from .commands import load_command_table
