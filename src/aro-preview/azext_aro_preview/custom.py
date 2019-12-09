@@ -136,8 +136,8 @@ def aro_preview_delete(client, resource_group_name, resource_name,
                        resource_group_name=resource_group_name,
                        resource_name=resource_name)
 
-def aro_preview_list(client, resource_group_name):
-    return client.list(resource_group_name)
+def aro_preview_list(client):
+    return client.list()
 
 def aro_preview_show(client, resource_group_name, resource_name):
     return client.get(resource_group_name, resource_name)
