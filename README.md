@@ -11,7 +11,7 @@ zdev extension add aro
 ## Dev RP
 
 To run CLI commands for dev CLI you will need to set env `BASE_URL`
-to `BASE_URL=https://localhost:8443/`.
+to `export BASE_URL=https://localhost:8443/`.
 
 Disable ssl check for CLI:
 `export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1`
