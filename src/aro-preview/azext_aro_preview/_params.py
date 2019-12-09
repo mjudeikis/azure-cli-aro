@@ -14,7 +14,7 @@ def load_arguments(self, _):
 
     resource_name_type = CLIArgumentType(options_list='--resource-name-name', help='Name of the aro-preview.', id_part='name')
 
-    with self.argument_context('aro-preview') as c:
+    with self.argument_context('aro') as c:
         c.argument('tags', tags_type)
         c.argument('location', validator=get_default_location_from_resource_group)
         c.argument('resource_name', resource_name_type, options_list=['--name', '-n'])
@@ -48,13 +48,13 @@ def load_arguments(self, _):
         c.argument('vnet-worker-subnet-name', options_list=('--vnet-worker-subnet-name'),
                    help='Vnet worker subnet name')
 
-    with self.argument_context('aro-preview update') as c:
+    with self.argument_context('aro update') as c:
         c.argument('worker-pool-name', options_list=('--worker-pool-name'), help='Worker VM Pool Name [Default: workers]')
         c.argument('worker-count', options_list=('--worker-count'), help='Worker VM Count [Default: 3]')
 
-    with self.argument_context('aro-preview delete') as c:
+    with self.argument_context('aro delete') as c:
         c.argument('resource_name', resource_name_type, options_list=['--name', '-n'])
 
 
-    with self.argument_context('aro-preview get-credentials') as c:
+    with self.argument_context('aro get-credentials') as c:
         c.argument('resource_name', resource_name_type, options_list=['--name', '-n'])

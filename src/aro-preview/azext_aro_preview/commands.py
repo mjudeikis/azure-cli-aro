@@ -15,7 +15,7 @@ def load_command_table(self, _):
         client_factory=cf_aro_preview)
 
 
-    with self.command_group('aro-preview', aro_preview_sdk, client_factory=cf_aro_preview) as g:
+    with self.command_group('aro', aro_preview_sdk, client_factory=cf_aro_preview) as g:
         g.custom_command('create', 'aro_preview_create', supports_no_wait=True)
         g.custom_command('delete', 'aro_preview_delete', supports_no_wait=True)
         g.custom_command('list', 'aro_preview_list')
