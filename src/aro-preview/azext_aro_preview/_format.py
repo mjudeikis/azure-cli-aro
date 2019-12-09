@@ -8,13 +8,10 @@ from jmespath import compile as compile_jmes, Options
 
 def aro_show_table_format(result):
     """Format a managed cluster as summary results for display with "-o table"."""
-    print(result)
     return [_aro_table_format(result)]
 
 def aro_list_table_format(results):
     """Format a cluster list for display with "-o table"."""
-    for r in results.values():
-        print(r)
     return [_aro_table_format(r[0]) for r in results.values()]
 
 def _aro_table_format(result):
